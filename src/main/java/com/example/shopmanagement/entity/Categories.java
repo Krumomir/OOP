@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import lombok.Data;
 
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -16,6 +17,6 @@ public class Categories {
     private Long id;
     private String name;
 
-    @ManyToMany
-    private List<Products> products;
+    @ManyToMany(mappedBy = "categories")
+    private Collection<Products> products;
 }

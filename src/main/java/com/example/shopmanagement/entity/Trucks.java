@@ -2,6 +2,7 @@ package com.example.shopmanagement.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -11,6 +12,6 @@ public class Trucks {
     private Long id;
     private String name;
 
-    @ManyToMany
-    private List<Shop> shop;
+    @ManyToMany(mappedBy = "trucks")
+    private Collection<Shop> shops;
 }

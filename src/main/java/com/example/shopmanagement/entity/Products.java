@@ -1,11 +1,9 @@
 package com.example.shopmanagement.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -17,6 +15,17 @@ public class Products {
     private String name;
     private double price;
 
-    @ManyToMany
-    private List<Categories> categories;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "ProductCategories",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Collection<Categories> categories;
+
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "stock_id")
+    private Stock stock;
+
 }

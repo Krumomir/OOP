@@ -3,6 +3,7 @@ package com.example.shopmanagement.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -13,9 +14,10 @@ public class Stock {
     private Long id;
     private int inStock;
 
-    @OneToOne
-    private Products products;
+    @OneToMany(mappedBy = "stock")
+    private Collection<Shop> shops;
 
-    @OneToOne
-    private Shop  shop;
+    @OneToMany(mappedBy = "stock")
+    private Collection<Products> products;
+
 }

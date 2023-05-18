@@ -3,6 +3,7 @@ package com.example.shopmanagement.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -13,9 +14,18 @@ public class Shop {
     private Long id;
     private String name;
 
-    @OneToMany
-    private List<Employees> employees;
+    @OneToMany(mappedBy = "shop")
+    private Collection<Employees> employees;
 
-    @ManyToMany
-    private List<Trucks> trucks;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "ShopTrucks",
+            joinColumns = @JoinColumn(name = "shop_id"),
+            inverseJoinColumns = @JoinColumn(name = "truck_id")
+    )
+    private Collection<Trucks> trucks;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "stock_id")
+    private Stock stock;
 }

@@ -2,6 +2,8 @@ package com.example.shopmanagement.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Collection;
+
 @Entity
 public class Employees {
     @Id
@@ -11,6 +13,7 @@ public class Employees {
     private String role;
     private Long salary;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "shopId")
     private Shop shop;
 }
