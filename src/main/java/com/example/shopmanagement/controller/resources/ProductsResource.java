@@ -9,6 +9,6 @@ public class ProductsResource {
 private Long id;
     private String name;
     private Double price;
-    private Collection<CategoriesResource> categories;
+    private Collection<String> categories;
     private Long stockId;
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class Stock {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int inStock;
 

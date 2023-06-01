@@ -9,7 +9,7 @@ import java.util.Collection;
 @Data
 public class Employees {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String role;

@@ -10,10 +10,10 @@ import java.util.List;
 @Data
 public class Trucks {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
     @ManyToMany(mappedBy = "trucks")
-    private Collection<Shop> shops;
+    private Collection<String> shops;
 }
