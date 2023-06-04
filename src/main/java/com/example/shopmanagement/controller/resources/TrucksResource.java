@@ -9,5 +9,5 @@ import java.util.Collection;
 public class TrucksResource {
     private Long id;
     private String name;
-    private Collection<ShopResource> shops;
+    private Collection<String> shops;
 }

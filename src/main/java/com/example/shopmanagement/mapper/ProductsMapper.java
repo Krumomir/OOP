@@ -15,36 +15,32 @@ public interface ProductsMapper {
     ProductsMapper PRODUCTS_MAPPER = Mappers.getMapper(ProductsMapper.class);
     @Mapping(target = "stock.id", source = "ProductsResource.stockId")
     default Products fromProductsResource(ProductsResource ProductsResource) {
-        Products Products = new Products();
-        Products.setId(ProductsResource.getId());
-        Products.setName(ProductsResource.getName());
-        Products.setPrice(ProductsResource.getPrice());
-        Collection<Categories> categories = null;
+        Products products = new Products();
+        products.setId(ProductsResource.getId());
+        products.setName(ProductsResource.getName());
+        products.setPrice(ProductsResource.getPrice());
 
         for (String category : ProductsResource.getCategories()) {
             Categories categories1 = new Categories();
             categories1.setName(category);
-            categories.add(categories1);
+            products.getCategories().add(categories1);
         }
 
-        Products.setCategories(categories);
-        return Products;
+        return products;
     }
     @Mapping(target = "stockId", source = "Products.stock.id")
     default ProductsResource toProductsResource(Products Products)
     {
-        ProductsResource ProductsResource = new ProductsResource();
-        ProductsResource.setId(Products.getId());
-        ProductsResource.setName(Products.getName());
-        ProductsResource.setPrice(Products.getPrice());
-        Collection<String> categories = null;
+        ProductsResource productsResource = new ProductsResource();
+        productsResource.setId(Products.getId());
+        productsResource.setName(Products.getName());
+        productsResource.setPrice(Products.getPrice());
 
-        categories.stream().forEach(category -> {
-            categories.add(category);
-        });
+        for (Categories category : Products.getCategories()) {
+            productsResource.getCategories().add(category.getName());
+        }
 
-        ProductsResource.setCategories(categories);
-        return ProductsResource;
+        return productsResource;
     }
     Collection<ProductsResource> toProductsResources(Collection<Products> Products);
 }

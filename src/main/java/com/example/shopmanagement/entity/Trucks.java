@@ -1,5 +1,6 @@
 package com.example.shopmanagement.entity;
 
+import com.example.shopmanagement.mapper.ShopMapper;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,5 +16,5 @@ public class Trucks {
     private String name;
 
     @ManyToMany(mappedBy = "trucks")
-    private Collection<String> shops;
+    private Collection<Shop> shops;
 }
