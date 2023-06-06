@@ -4,6 +4,7 @@ import com.example.shopmanagement.controller.resources.CategoriesResource;
 import com.example.shopmanagement.entity.Categories;
 import com.example.shopmanagement.repository.CategoriesRepository;
 import com.example.shopmanagement.service.CategoriesService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,13 @@ public class CategoriesServiceImpl implements CategoriesService {
 
     @Override
     public CategoriesResource update(CategoriesResource categories, Long id) {
-        return null;
+        try {
+            Categories savedCategories = categoriesRepository.save(CATEGORIES_MAPPER.fromCategoriesResource(categories));
+            categories.setName(savedCategories.getName());
+            return categories;
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Categories not found");
+        }
     }
 
     @Override

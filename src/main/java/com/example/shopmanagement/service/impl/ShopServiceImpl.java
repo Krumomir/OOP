@@ -4,6 +4,7 @@ import com.example.shopmanagement.controller.resources.ShopResource;
 import com.example.shopmanagement.entity.Shop;
 import com.example.shopmanagement.repository.ShopRepository;
 import com.example.shopmanagement.service.ShopService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,14 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public ShopResource update(ShopResource shop, Long id) {
-        return null;
+        try {
+            Shop savedShop = shopRepository.getReferenceById(id);
+            savedShop.setName(shop.getName());
+            return SHOP_MAPPER.toShopResource(shopRepository.save(savedShop));
+        }
+        catch (Exception e) {
+            throw new EntityNotFoundException("Shop not found");
+        }
     }
 
     @Override

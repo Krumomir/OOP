@@ -4,6 +4,7 @@ import com.example.shopmanagement.controller.resources.StockResource;
 import com.example.shopmanagement.entity.Stock;
 import com.example.shopmanagement.repository.StockRepository;
 import com.example.shopmanagement.service.StockService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,13 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public StockResource update(StockResource stock, Long id) {
-        return null;
+        try {
+            Stock savedStock = stockRepository.save(STOCK_MAPPER.fromStockResource(stock));
+            stock.setInStock(savedStock.getInStock());
+            return stock;
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Stock not found");
+        }
     }
 
     @Override

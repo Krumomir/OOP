@@ -7,7 +7,7 @@ import java.util.Collection;
 @Data
 public class StockResource {
     private Long id;
-    private Long inStock;
+    private int inStock;
     private Collection<ProductsResource> products;
     private Collection<ShopResource> shops;
 }

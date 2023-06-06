@@ -4,6 +4,7 @@ import com.example.shopmanagement.controller.resources.ProductsResource;
 import com.example.shopmanagement.entity.Products;
 import com.example.shopmanagement.repository.ProductsRepository;
 import com.example.shopmanagement.service.ProductsService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,14 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Override
     public ProductsResource update(ProductsResource products, Long id) {
-        return null;
+        try {
+            Products savedProducts = productsRepository.save(PRODUCTS_MAPPER.fromProductsResource(products));
+            products.setName(savedProducts.getName());
+            products.setPrice(savedProducts.getPrice());
+            return products;
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Products not found");
+        }
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.example.shopmanagement.controller;
 
-
 import com.example.shopmanagement.controller.resources.ShopResource;
 import com.example.shopmanagement.service.ShopService;
 import lombok.RequiredArgsConstructor;

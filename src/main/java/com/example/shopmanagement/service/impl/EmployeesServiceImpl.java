@@ -4,6 +4,7 @@ import com.example.shopmanagement.controller.resources.EmployeesResource;
 import com.example.shopmanagement.entity.Employees;
 import com.example.shopmanagement.repository.EmployeesRepository;
 import com.example.shopmanagement.service.EmployeesService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,15 @@ public class EmployeesServiceImpl implements EmployeesService {
 
     @Override
     public EmployeesResource update(EmployeesResource employees, Long id) {
-        return null;
+        try {
+            Employees savedEmployees = employeesRepository.save(EMPLOYEES_MAPPER.fromEmployeesResource(employees));
+            employees.setName(savedEmployees.getName());
+            employees.setSalary(savedEmployees.getSalary());
+            employees.setRole(savedEmployees.getRole());
+            return employees;
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Employees not found");
+        }
     }
 
     @Override

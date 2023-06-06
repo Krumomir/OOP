@@ -4,6 +4,7 @@ import com.example.shopmanagement.controller.resources.TrucksResource;
 import com.example.shopmanagement.entity.Trucks;
 import com.example.shopmanagement.repository.TrucksRepository;
 import com.example.shopmanagement.service.TrucksService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,13 @@ public class TrucksServiceImpl implements TrucksService {
 
     @Override
     public TrucksResource update(TrucksResource trucks, Long id) {
-        return null;
+        try {
+            Trucks savedTrucks = trucksRepository.save(TRUCKS_MAPPER.fromTrucksResource(trucks));
+            trucks.setName(savedTrucks.getName());
+            return trucks;
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Trucks not found");
+        }
     }
 
     @Override
