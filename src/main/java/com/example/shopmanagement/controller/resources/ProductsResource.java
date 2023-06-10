@@ -11,4 +11,5 @@ private Long id;
     private Double price;
     private Collection<String> categories;
     private Collection<String> shops;
+    private Collection<String> users;
 }

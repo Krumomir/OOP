@@ -1,22 +1,21 @@
 package com.example.shopmanagement.entity;
 
-import com.example.shopmanagement.mapper.ShopMapper;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Data
-@Table(name = "trucks")
-public class Trucks {
+@Table(name = "users")
+public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String username;
+    private String password;
+    private String role;
 
-    @ManyToOne
-    @JoinColumn(name = "shop_id")
-    private Shop shop;
+    @ManyToMany(mappedBy = "users")
+    private Collection<Products> products;
 }

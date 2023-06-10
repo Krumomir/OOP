@@ -8,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Data
+@Table(name = "products")
 public class Products {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,4 +31,12 @@ public class Products {
             inverseJoinColumns = @JoinColumn(name = "shop_id")
     )
     private Collection<Shop> shops;
+
+    @ManyToMany
+    @JoinTable(
+            name = "UserProducts",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Collection<Users> users;
 }
