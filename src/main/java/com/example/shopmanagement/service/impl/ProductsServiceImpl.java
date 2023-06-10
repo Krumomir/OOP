@@ -12,9 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 import static com.example.shopmanagement.mapper.ProductsMapper.PRODUCTS_MAPPER;
 @Service
@@ -41,11 +39,6 @@ public class ProductsServiceImpl implements ProductsService {
         products.getShops()
                 .removeIf(shop -> !shopsRepository.existsByName(shop));
 
-        if(products.getCategories().isEmpty())
-            throw new EntityNotFoundException("Categories not found");
-
-        if(products.getShops().isEmpty())
-            throw new EntityNotFoundException("Shops not found");
 
         Products product = PRODUCTS_MAPPER.fromProductsResource(products);
         Collection<Categories> realCategories = new ArrayList<>();
@@ -76,12 +69,47 @@ public class ProductsServiceImpl implements ProductsService {
                 savedProducts.setName(products.getName());
             if(products.getPrice() != null)
                 savedProducts.setPrice(products.getPrice());
-            if(products.getCategories() != null) {
-                products.getCategories().forEach(category -> {
-                    if(categoriesRepository.existsByName(category))
-                        savedProducts.getCategories().add(categoriesRepository.findByName(category).get());
-                });
+
+            if (products.getCategories() != null) {
+                Set<Categories> categoriesSet = new HashSet<>();
+                for (String categoryName : products.getCategories()) {
+                    Categories existingCategory = categoriesRepository.findByName(categoryName)
+                            .orElse(null);
+                    if (!(existingCategory == null))
+                        categoriesSet.add(existingCategory);
+                }
+                savedProducts.setCategories(categoriesSet);
             }
+            else {
+                savedProducts.setCategories(null);
+            }
+
+            if(products.getShops() != null) {
+                Set<Shop> shopsSet = new HashSet<>();
+                for (String shopName : products.getShops()) {
+                    Shop existingShop = shopsRepository.findByName(shopName)
+                            .orElse(null);
+                    if (!(existingShop == null))
+                        shopsSet.add(existingShop);
+                }
+                savedProducts.setShops(shopsSet);
+            }else {
+                savedProducts.setShops(null);
+            }
+
+            if (products.getUsers() != null) {
+                Set<Shop> shopsSet = new HashSet<>();
+                for (String shopName : products.getShops()) {
+                    Shop existingShop = shopsRepository.findByName(shopName)
+                            .orElse(null);
+                    if (!(existingShop == null))
+                        shopsSet.add(existingShop);
+                }
+                savedProducts.setShops(shopsSet);
+            }else {
+                savedProducts.setShops(null);
+            }
+
             return PRODUCTS_MAPPER.toProductsResource(productsRepository.save(savedProducts));
         } catch (Exception e) {
             throw new EntityNotFoundException("Products not found");

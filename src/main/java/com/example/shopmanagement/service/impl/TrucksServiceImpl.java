@@ -1,6 +1,7 @@
 package com.example.shopmanagement.service.impl;
 
 import com.example.shopmanagement.controller.resources.TrucksResource;
+import com.example.shopmanagement.repository.ShopRepository;
 import com.example.shopmanagement.entity.Trucks;
 import com.example.shopmanagement.repository.TrucksRepository;
 import com.example.shopmanagement.service.TrucksService;
@@ -16,6 +17,7 @@ import static com.example.shopmanagement.mapper.TrucksMapper.TRUCKS_MAPPER;
 @RequiredArgsConstructor
 public class TrucksServiceImpl implements TrucksService {
     private final TrucksRepository trucksRepository;
+    private final ShopRepository shopRepository;
     @Override
     public Collection<TrucksResource> findAll() {
         return TRUCKS_MAPPER.toTrucksResources(trucksRepository.findAll());
@@ -39,6 +41,10 @@ public class TrucksServiceImpl implements TrucksService {
             Trucks savedTrucks = trucksRepository.getReferenceById(id);
             if (trucks.getName() != null)
                 savedTrucks.setName(trucks.getName());
+
+            if (trucks.getShopId() != null)
+                savedTrucks.setShop(shopRepository.getReferenceById(trucks.getShopId()));
+
             return TRUCKS_MAPPER.toTrucksResource(trucksRepository.save(savedTrucks));
         } catch (Exception e) {
             throw new EntityNotFoundException("Trucks not found");

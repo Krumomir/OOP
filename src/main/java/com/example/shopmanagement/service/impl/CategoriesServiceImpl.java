@@ -1,7 +1,9 @@
 package com.example.shopmanagement.service.impl;
 
 import com.example.shopmanagement.controller.resources.CategoriesResource;
+import com.example.shopmanagement.controller.resources.ProductsResource;
 import com.example.shopmanagement.entity.Categories;
+import com.example.shopmanagement.entity.Products;
 import com.example.shopmanagement.repository.CategoriesRepository;
 import com.example.shopmanagement.repository.ProductsRepository;
 import com.example.shopmanagement.service.CategoriesService;
@@ -9,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -18,7 +21,7 @@ import static com.example.shopmanagement.mapper.CategoriesMapper.CATEGORIES_MAPP
 @RequiredArgsConstructor
 public class CategoriesServiceImpl implements CategoriesService {
     private final CategoriesRepository categoriesRepository;
-
+    private final ProductsRepository productsRepository;
     @Override
     public Collection<CategoriesResource> findAll() {
         return CATEGORIES_MAPPER.toCategoriesResources(categoriesRepository.findAll());
@@ -42,10 +45,36 @@ public class CategoriesServiceImpl implements CategoriesService {
             Categories savedCategories = categoriesRepository.getReferenceById(id);
             if (categories.getName() != null)
                 savedCategories.setName(categories.getName());
+
+            for (ProductsResource productResource : categories.getProducts()) {
+                Products existingProduct = productsRepository.findByName(productResource.getName())
+                        .orElse(null);
+                if (!(existingProduct == null))
+                    savedCategories.getProducts().add(existingProduct);
+            }
+
             return CATEGORIES_MAPPER.toCategoriesResource(categoriesRepository.save(savedCategories));
         } catch (Exception e) {
             throw new EntityNotFoundException("Categories not found");
         }
+       /* try {
+            Categories savedCategories = categoriesRepository.getReferenceById(id);
+            if (categories.getName() != null)
+                savedCategories.setName(categories.getName());
+
+            savedCategories.getProducts().clear();
+
+            for (ProductsResource productResource : categories.getProducts()) {
+                Products existingProduct = productsRepository.findByName(productResource.getName())
+                        .orElse(null);
+                if (!(existingProduct == null))
+                    savedCategories.getProducts().add(existingProduct);
+            }
+
+            return CATEGORIES_MAPPER.toCategoriesResource(categoriesRepository.save(savedCategories));
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Categories not found");
+        }*/
     }
 
     @Override

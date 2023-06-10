@@ -2,6 +2,7 @@ package com.example.shopmanagement.service.impl;
 
 import com.example.shopmanagement.controller.resources.ProductsResource;
 import com.example.shopmanagement.controller.resources.UsersResource;
+import com.example.shopmanagement.entity.Products;
 import com.example.shopmanagement.entity.Users;
 import com.example.shopmanagement.repository.ProductsRepository;
 import com.example.shopmanagement.repository.UsersRepository;
@@ -52,9 +53,14 @@ public class UsersServiceImpl implements UsersService {
             if (users.getRole() != null)
                 savedUsers.setRole(users.getRole());
 
-            savedUsers.setProducts(productsRepository.findAllById(
-                    users.getProducts().stream().map(ProductsResource::getId).toList()));
+            savedUsers.getProducts().clear();
 
+            for (ProductsResource productResource : users.getProducts()) {
+                Products existingProduct = productsRepository.findByName(productResource.getName())
+                        .orElse(null);
+                if (!(existingProduct == null))
+                    savedUsers.getProducts().add(existingProduct);
+            }
             return USER_MAPPER.toUsersResource(usersRepository.save(savedUsers));
         } catch (Exception e) {
             throw new EntityNotFoundException("Users not found");

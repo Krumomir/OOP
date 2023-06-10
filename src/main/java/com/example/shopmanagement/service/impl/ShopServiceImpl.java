@@ -1,9 +1,17 @@
 package com.example.shopmanagement.service.impl;
 
+import com.example.shopmanagement.controller.resources.EmployeesResource;
+import com.example.shopmanagement.controller.resources.ProductsResource;
 import com.example.shopmanagement.controller.resources.ShopResource;
+import com.example.shopmanagement.controller.resources.TrucksResource;
+import com.example.shopmanagement.entity.Employees;
+import com.example.shopmanagement.entity.Products;
 import com.example.shopmanagement.entity.Shop;
+import com.example.shopmanagement.entity.Trucks;
 import com.example.shopmanagement.repository.EmployeesRepository;
+import com.example.shopmanagement.repository.ProductsRepository;
 import com.example.shopmanagement.repository.ShopRepository;
+import com.example.shopmanagement.repository.TrucksRepository;
 import com.example.shopmanagement.service.ShopService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +27,8 @@ import static com.example.shopmanagement.mapper.ShopMapper.SHOP_MAPPER;
 public class ShopServiceImpl implements ShopService {
     private final ShopRepository shopRepository;
     private final EmployeesRepository employeesRepository;
+    private final ProductsRepository productsRepository;
+    private final TrucksRepository trucksRepository;
     @Override
     public Collection<ShopResource> findAll() {
         return SHOP_MAPPER.toShopResources(shopRepository.findAll());
@@ -42,6 +52,28 @@ public class ShopServiceImpl implements ShopService {
             Shop savedShop = shopRepository.getReferenceById(id);
             if (shop.getName() != null)
                 savedShop.setName(shop.getName());
+
+            for (ProductsResource productResource : shop.getProducts()) {
+                Products existingProduct = productsRepository.findByName(productResource.getName())
+                        .orElse(null);
+                if (!(existingProduct == null))
+                    savedShop.getProducts().add(existingProduct);
+            }
+
+            for (EmployeesResource employeeResource : shop.getEmployees()) {
+                Employees existingEmployee = employeesRepository.findByName(employeeResource.getName())
+                        .orElse(null);
+                if (!(existingEmployee == null))
+                    savedShop.getEmployees().add(existingEmployee);
+            }
+
+            for (TrucksResource truckResource : shop.getTrucks()) {
+                Trucks existingTruck = trucksRepository.findByName(truckResource.getName())
+                        .orElse(null);
+                if (!(existingTruck == null))
+                    savedShop.getTrucks().add(existingTruck);
+            }
+
             return SHOP_MAPPER.toShopResource(shopRepository.save(savedShop));
         }
         catch (Exception e) {
