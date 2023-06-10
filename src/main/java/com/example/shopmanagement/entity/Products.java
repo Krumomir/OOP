@@ -22,4 +22,12 @@ public class Products {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private Collection<Categories> categories;
+
+    @ManyToMany
+    @JoinTable(
+            name = "ShopProducts",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "shop_id")
+    )
+    private Collection<Shop> shops;
 }

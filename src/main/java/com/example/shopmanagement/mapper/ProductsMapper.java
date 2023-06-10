@@ -3,6 +3,7 @@ package com.example.shopmanagement.mapper;
 import com.example.shopmanagement.controller.resources.ProductsResource;
 import com.example.shopmanagement.entity.Categories;
 import com.example.shopmanagement.entity.Products;
+import com.example.shopmanagement.entity.Shop;
 import com.example.shopmanagement.repository.CategoriesRepository;
 
 import com.example.shopmanagement.repository.CategoriesRepository;
@@ -23,11 +24,18 @@ public interface ProductsMapper {
         products.setName(productsResource.getName());
         products.setPrice(productsResource.getPrice());
         products.setCategories(new ArrayList<>());
+        products.setShops(new ArrayList<>());
 
         for (String category : productsResource.getCategories()){
             Categories categories1 = new Categories();
             categories1.setName(category);
             products.getCategories().add(categories1);
+        }
+
+        for (String shop : productsResource.getShops()){
+            Shop shops1 = new Shop();
+            shops1.setName(shop);
+            products.getShops().add(shops1);
         }
 
         return products;
@@ -39,9 +47,14 @@ public interface ProductsMapper {
         productsResource.setName(Products.getName());
         productsResource.setPrice(Products.getPrice());
         productsResource.setCategories(new ArrayList<>());
+        productsResource.setShops(new ArrayList<>());
 
         for (Categories category : Products.getCategories()) {
             productsResource.getCategories().add(category.getName());
+        }
+
+        for (Shop shop : Products.getShops()) {
+            productsResource.getShops().add(shop.getName());
         }
 
         return productsResource;

@@ -13,7 +13,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.Collection;
 
-@Mapper(uses = {EmployeesMapper.class, TrucksMapper.class})
+@Mapper(uses = {EmployeesMapper.class, TrucksMapper.class, ProductsMapper.class})
 public interface ShopMapper {
     ShopMapper SHOP_MAPPER = Mappers.getMapper(ShopMapper.class);
     Shop fromShopResource(ShopResource shopResource);

@@ -3,8 +3,10 @@ package com.example.shopmanagement.service.impl;
 import com.example.shopmanagement.controller.resources.ProductsResource;
 import com.example.shopmanagement.entity.Categories;
 import com.example.shopmanagement.entity.Products;
+import com.example.shopmanagement.entity.Shop;
 import com.example.shopmanagement.repository.CategoriesRepository;
 import com.example.shopmanagement.repository.ProductsRepository;
+import com.example.shopmanagement.repository.ShopRepository;
 import com.example.shopmanagement.service.ProductsService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import static com.example.shopmanagement.mapper.ProductsMapper.PRODUCTS_MAPPER;
 public class ProductsServiceImpl implements ProductsService {
     private final ProductsRepository productsRepository;
     private final CategoriesRepository categoriesRepository;
+    private final ShopRepository shopsRepository;
     @Override
     public Collection<ProductsResource> findAll() {
         return PRODUCTS_MAPPER.toProductsResources(productsRepository.findAll());
@@ -35,18 +38,31 @@ public class ProductsServiceImpl implements ProductsService {
         products.getCategories()
                 .removeIf(category -> !categoriesRepository.existsByName(category));
 
+        products.getShops()
+                .removeIf(shop -> !shopsRepository.existsByName(shop));
+
         if(products.getCategories().isEmpty())
             throw new EntityNotFoundException("Categories not found");
 
+        if(products.getShops().isEmpty())
+            throw new EntityNotFoundException("Shops not found");
+
         Products product = PRODUCTS_MAPPER.fromProductsResource(products);
         Collection<Categories> realCategories = new ArrayList<>();
+        Collection<Shop> realShops = new ArrayList<>();
 
         for (Categories category : product.getCategories()) {
             Optional<Categories> categories = categoriesRepository.findByName(category.getName());
-            realCategories.add(categories.get());
+            categories.ifPresent(realCategories::add);
+        }
+
+        for (Shop shop : product.getShops()) {
+            Optional<Shop> shops = shopsRepository.findByName(shop.getName());
+            shops.ifPresent(realShops::add);
         }
 
         product.setCategories(realCategories);
+        product.setShops(realShops);
         Products savedProducts = productsRepository.save(product);
         products.setId(savedProducts.getId());
         return products;

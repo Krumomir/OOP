@@ -20,4 +20,6 @@ public class Shop {
     @OneToMany(mappedBy = "shop")
     private Collection<Trucks> trucks;
 
+    @ManyToMany(mappedBy = "shops")
+    private Collection<Products> products;
 }

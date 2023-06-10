@@ -51,6 +51,9 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public void delete(Long id) {
+        Shop shop = shopRepository.getReferenceById(id);
+        shop.getProducts().forEach(product ->
+            product.getShops().remove(shop));
         shopRepository.deleteById(id);
     }
 }
