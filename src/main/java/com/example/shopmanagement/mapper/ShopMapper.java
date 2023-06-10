@@ -16,9 +16,7 @@ import java.util.Collection;
 @Mapper(uses = {EmployeesMapper.class, TrucksMapper.class})
 public interface ShopMapper {
     ShopMapper SHOP_MAPPER = Mappers.getMapper(ShopMapper.class);
-    @Mapping(target = "stock.id", source = "shopResource.stockId")
     Shop fromShopResource(ShopResource shopResource);
-    @InheritInverseConfiguration
     ShopResource toShopResource(Shop shop);
     Collection<ShopResource> toShopResources(Collection<Shop> shops);
 

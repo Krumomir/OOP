@@ -15,17 +15,11 @@ public class Products {
     private String name;
     private double price;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "ProductCategories",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private Collection<Categories> categories;
-
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "stock_id")
-    private Stock stock;
-
 }

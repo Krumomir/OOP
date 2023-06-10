@@ -10,5 +10,4 @@ public class ShopResource {
     private String name;
     private Collection<EmployeesResource> employees;
     private Collection<TrucksResource> trucks;
-    private Long stockId;
 }

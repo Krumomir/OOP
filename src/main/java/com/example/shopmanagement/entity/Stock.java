@@ -14,10 +14,5 @@ public class Stock {
     private Long id;
     private int inStock;
 
-    @OneToMany(mappedBy = "stock")
-    private Collection<Shop> shops;
-
-    @OneToMany(mappedBy = "stock")
-    private Collection<Products> products;
 
 }

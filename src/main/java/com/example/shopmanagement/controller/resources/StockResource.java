@@ -8,6 +8,4 @@ import java.util.Collection;
 public class StockResource {
     private Long id;
     private int inStock;
-    private Collection<ProductsResource> products;
-    private Collection<ShopResource> shops;
 }

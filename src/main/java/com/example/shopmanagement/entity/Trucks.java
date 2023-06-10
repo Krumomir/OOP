@@ -15,6 +15,7 @@ public class Trucks {
     private Long id;
     private String name;
 
-    @ManyToMany(mappedBy = "trucks")
-    private Collection<Shop> shops;
+    @ManyToOne
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
 }

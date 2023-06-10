@@ -8,7 +8,6 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.Collection;
 
-@Mapper(uses = {ShopMapper.class, ProductsMapper.class})
 public interface StockMapper {
     StockMapper STOCK_MAPPER = Mappers.getMapper(StockMapper.class);
     Stock fromStockResource(StockResource stockResource);

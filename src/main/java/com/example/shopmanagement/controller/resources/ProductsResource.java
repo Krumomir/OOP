@@ -10,5 +10,4 @@ private Long id;
     private String name;
     private Double price;
     private Collection<String> categories;
-    private Long stockId;
 }

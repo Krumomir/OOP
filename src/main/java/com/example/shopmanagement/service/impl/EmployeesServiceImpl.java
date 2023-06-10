@@ -32,17 +32,24 @@ public class EmployeesServiceImpl implements EmployeesService {
     public EmployeesResource create(EmployeesResource employees) {
         Employees savedEmployees = employeesRepository.save(EMPLOYEES_MAPPER.fromEmployeesResource(employees));
         employees.setId(savedEmployees.getId());
+        employees.setName(savedEmployees.getName());
+        employees.setRole(savedEmployees.getRole());
+        employees.setSalary(savedEmployees.getSalary());
+        employees.setShopId(savedEmployees.getShop().getId());
         return employees;
     }
 
     @Override
     public EmployeesResource update(EmployeesResource employees, Long id) {
         try {
-            Employees savedEmployees = employeesRepository.save(EMPLOYEES_MAPPER.fromEmployeesResource(employees));
-            employees.setName(savedEmployees.getName());
-            employees.setSalary(savedEmployees.getSalary());
-            employees.setRole(savedEmployees.getRole());
-            return employees;
+            Employees savedEmployees = employeesRepository.getReferenceById(id);
+            if (employees.getName() != null)
+                savedEmployees.setName(employees.getName());
+            if (employees.getRole() != null)
+                savedEmployees.setRole(employees.getRole());
+            if (employees.getSalary() != null)
+                savedEmployees.setSalary(employees.getSalary());
+            return EMPLOYEES_MAPPER.toEmployeesResource(employeesRepository.save(savedEmployees));
         } catch (Exception e) {
             throw new EntityNotFoundException("Employees not found");
         }

@@ -14,18 +14,10 @@ public class Shop {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "shop")
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
     private Collection<Employees> employees;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "ShopTrucks",
-            joinColumns = @JoinColumn(name = "shop_id"),
-            inverseJoinColumns = @JoinColumn(name = "truck_id")
-    )
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
     private Collection<Trucks> trucks;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "stock_id")
-    private Stock stock;
 }

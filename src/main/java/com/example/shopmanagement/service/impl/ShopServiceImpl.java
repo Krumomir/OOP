@@ -38,7 +38,8 @@ public class ShopServiceImpl implements ShopService {
     public ShopResource update(ShopResource shop, Long id) {
         try {
             Shop savedShop = shopRepository.getReferenceById(id);
-            savedShop.setName(shop.getName());
+            if (shop.getName() != null)
+                savedShop.setName(shop.getName());
             return SHOP_MAPPER.toShopResource(shopRepository.save(savedShop));
         }
         catch (Exception e) {

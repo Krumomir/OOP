@@ -15,7 +15,7 @@ public class Employees {
     private String role;
     private Long salary;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "shop_id")
     private Shop shop;
 }

@@ -36,9 +36,10 @@ public class TrucksServiceImpl implements TrucksService {
     @Override
     public TrucksResource update(TrucksResource trucks, Long id) {
         try {
-            Trucks savedTrucks = trucksRepository.save(TRUCKS_MAPPER.fromTrucksResource(trucks));
-            trucks.setName(savedTrucks.getName());
-            return trucks;
+            Trucks savedTrucks = trucksRepository.getReferenceById(id);
+            if (trucks.getName() != null)
+                savedTrucks.setName(trucks.getName());
+            return TRUCKS_MAPPER.toTrucksResource(trucksRepository.save(savedTrucks));
         } catch (Exception e) {
             throw new EntityNotFoundException("Trucks not found");
         }

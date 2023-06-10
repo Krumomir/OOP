@@ -38,9 +38,10 @@ public class CategoriesServiceImpl implements CategoriesService {
     @Override
     public CategoriesResource update(CategoriesResource categories, Long id) {
         try {
-            Categories savedCategories = categoriesRepository.save(CATEGORIES_MAPPER.fromCategoriesResource(categories));
-            categories.setName(savedCategories.getName());
-            return categories;
+            Categories savedCategories = categoriesRepository.getReferenceById(id);
+            if (categories.getName() != null)
+                savedCategories.setName(categories.getName());
+            return CATEGORIES_MAPPER.toCategoriesResource(categoriesRepository.save(savedCategories));
         } catch (Exception e) {
             throw new EntityNotFoundException("Categories not found");
         }
