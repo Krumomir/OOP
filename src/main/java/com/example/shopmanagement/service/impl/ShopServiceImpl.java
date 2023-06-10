@@ -2,6 +2,7 @@ package com.example.shopmanagement.service.impl;
 
 import com.example.shopmanagement.controller.resources.ShopResource;
 import com.example.shopmanagement.entity.Shop;
+import com.example.shopmanagement.repository.EmployeesRepository;
 import com.example.shopmanagement.repository.ShopRepository;
 import com.example.shopmanagement.service.ShopService;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,6 +18,7 @@ import static com.example.shopmanagement.mapper.ShopMapper.SHOP_MAPPER;
 @RequiredArgsConstructor
 public class ShopServiceImpl implements ShopService {
     private final ShopRepository shopRepository;
+    private final EmployeesRepository employeesRepository;
     @Override
     public Collection<ShopResource> findAll() {
         return SHOP_MAPPER.toShopResources(shopRepository.findAll());

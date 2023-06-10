@@ -60,6 +60,12 @@ public class ProductsServiceImpl implements ProductsService {
                 savedProducts.setName(products.getName());
             if(products.getPrice() != null)
                 savedProducts.setPrice(products.getPrice());
+            if(products.getCategories() != null) {
+                products.getCategories().forEach(category -> {
+                    if(categoriesRepository.existsByName(category))
+                        savedProducts.getCategories().add(categoriesRepository.findByName(category).get());
+                });
+            }
             return PRODUCTS_MAPPER.toProductsResource(productsRepository.save(savedProducts));
         } catch (Exception e) {
             throw new EntityNotFoundException("Products not found");

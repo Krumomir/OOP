@@ -14,10 +14,10 @@ public class Shop {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shop")
     private Collection<Employees> employees;
 
-    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shop")
     private Collection<Trucks> trucks;
 
 }
