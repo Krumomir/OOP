@@ -99,7 +99,7 @@ public class ProductsServiceImpl implements ProductsService {
 
             if (products.getUsers() != null) {
                 Set<Shop> shopsSet = new HashSet<>();
-                for (String shopName : products.getShops()) {
+                for (String shopName : products.getUsers()) {
                     Shop existingShop = shopsRepository.findByName(shopName)
                             .orElse(null);
                     if (!(existingShop == null))
