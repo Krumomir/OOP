@@ -11,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -53,14 +54,17 @@ public class UsersServiceImpl implements UsersService {
             if (users.getRole() != null)
                 savedUsers.setRole(users.getRole());
 
-            savedUsers.getProducts().clear();
-
-            for (ProductsResource productResource : users.getProducts()) {
-                Products existingProduct = productsRepository.findByName(productResource.getName())
-                        .orElse(null);
-                if (!(existingProduct == null))
-                    savedUsers.getProducts().add(existingProduct);
+            if (users.getProducts() != null) {
+                for (ProductsResource productResource : users.getProducts()) {
+                    Products existingProduct = productsRepository.findByName(productResource.getName())
+                            .orElse(null);
+                    if (!(existingProduct == null))
+                        savedUsers.getProducts().add(existingProduct);
+                }
             }
+            else
+                savedUsers.setProducts(new ArrayList<>());
+
             return USER_MAPPER.toUsersResource(usersRepository.save(savedUsers));
         } catch (Exception e) {
             throw new EntityNotFoundException("Users not found");

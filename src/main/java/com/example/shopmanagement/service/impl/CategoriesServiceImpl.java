@@ -46,12 +46,18 @@ public class CategoriesServiceImpl implements CategoriesService {
             if (categories.getName() != null)
                 savedCategories.setName(categories.getName());
 
-            for (ProductsResource productResource : categories.getProducts()) {
-                Products existingProduct = productsRepository.findByName(productResource.getName())
-                        .orElse(null);
-                if (!(existingProduct == null))
-                    savedCategories.getProducts().add(existingProduct);
+            if (categories.getProducts() != null)
+            {
+                for (ProductsResource productResource : categories.getProducts()) {
+                    Products existingProduct = productsRepository.findByName(productResource.getName())
+                            .orElse(null);
+                    if (!(existingProduct == null))
+                        savedCategories.getProducts().add(existingProduct);
+                }
             }
+            else
+                savedCategories.setProducts(new ArrayList<>());
+
 
             return CATEGORIES_MAPPER.toCategoriesResource(categoriesRepository.save(savedCategories));
         } catch (Exception e) {

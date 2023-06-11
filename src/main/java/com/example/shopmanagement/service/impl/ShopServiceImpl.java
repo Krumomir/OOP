@@ -17,6 +17,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -53,26 +54,38 @@ public class ShopServiceImpl implements ShopService {
             if (shop.getName() != null)
                 savedShop.setName(shop.getName());
 
-            for (ProductsResource productResource : shop.getProducts()) {
-                Products existingProduct = productsRepository.findByName(productResource.getName())
-                        .orElse(null);
-                if (!(existingProduct == null))
-                    savedShop.getProducts().add(existingProduct);
+            if (shop.getProducts() != null) {
+                for (ProductsResource productResource : shop.getProducts()) {
+                    Products existingProduct = productsRepository.findByName(productResource.getName())
+                            .orElse(null);
+                    if (!(existingProduct == null))
+                        savedShop.getProducts().add(existingProduct);
+                }
             }
+            else
+                savedShop.setProducts(new ArrayList<>());
 
-            for (EmployeesResource employeeResource : shop.getEmployees()) {
-                Employees existingEmployee = employeesRepository.findByName(employeeResource.getName())
-                        .orElse(null);
-                if (!(existingEmployee == null))
-                    savedShop.getEmployees().add(existingEmployee);
+            if (shop.getEmployees() != null) {
+                for (EmployeesResource employeeResource : shop.getEmployees()) {
+                    Employees existingEmployee = employeesRepository.findByName(employeeResource.getName())
+                            .orElse(null);
+                    if (!(existingEmployee == null))
+                        savedShop.getEmployees().add(existingEmployee);
+                }
             }
+            else
+                savedShop.setEmployees(new ArrayList<>());
 
-            for (TrucksResource truckResource : shop.getTrucks()) {
-                Trucks existingTruck = trucksRepository.findByName(truckResource.getName())
-                        .orElse(null);
-                if (!(existingTruck == null))
-                    savedShop.getTrucks().add(existingTruck);
+            if (shop.getTrucks() != null) {
+                for (TrucksResource truckResource : shop.getTrucks()) {
+                    Trucks existingTruck = trucksRepository.findByName(truckResource.getName())
+                            .orElse(null);
+                    if (!(existingTruck == null))
+                        savedShop.getTrucks().add(existingTruck);
+                }
             }
+            else
+                savedShop.setTrucks(new ArrayList<>());
 
             return SHOP_MAPPER.toShopResource(shopRepository.save(savedShop));
         }
