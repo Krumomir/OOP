@@ -13,8 +13,12 @@ import com.example.shopmanagement.repository.ProductsRepository;
 import com.example.shopmanagement.repository.ShopRepository;
 import com.example.shopmanagement.repository.TrucksRepository;
 import com.example.shopmanagement.service.ShopService;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.query.AuditEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,6 +34,7 @@ public class ShopServiceImpl implements ShopService {
     private final EmployeesRepository employeesRepository;
     private final ProductsRepository productsRepository;
     private final TrucksRepository trucksRepository;
+    private final EntityManagerFactory entityManager;
     @Override
     public Collection<ShopResource> findAll() {
         return SHOP_MAPPER.toShopResources(shopRepository.findAll());
@@ -93,6 +98,16 @@ public class ShopServiceImpl implements ShopService {
             throw new EntityNotFoundException("Shop not found");
         }
     }
+
+    @Override
+    public Collection<ShopResource> findAllAudits(long id) {
+        AuditReader reader = AuditReaderFactory.get(entityManager.createEntityManager());
+        return SHOP_MAPPER.toShopResources(reader.createQuery()
+                .forRevisionsOfEntity(Shop.class, true, true)
+                .add(AuditEntity.id().eq(id))
+                .getResultList());
+    }
+
 
     @Override
     public void delete(Long id) {

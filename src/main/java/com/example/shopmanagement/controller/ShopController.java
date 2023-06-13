@@ -37,6 +37,11 @@ public class ShopController {
         return ResponseEntity.ok(service.update(resource, id));
     }
 
+    @GetMapping("/{id}/audits")
+    public ResponseEntity<?> getAudits(@PathVariable long id) {
+        return ResponseEntity.ok(service.findAllAudits(id));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable long id) {
         service.delete(id);

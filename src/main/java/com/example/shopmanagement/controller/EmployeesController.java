@@ -37,6 +37,11 @@ public class EmployeesController {
         return ResponseEntity.ok(service.update(resource, id));
     }
 
+    @GetMapping("/{id}/audits")
+    public ResponseEntity<?> getAllAudits(@PathVariable long id) {
+        return ResponseEntity.ok(service.findAllAudits(id));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable long id) {
         service.delete(id);

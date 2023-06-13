@@ -4,11 +4,16 @@ import com.example.shopmanagement.controller.resources.EmployeesResource;
 import com.example.shopmanagement.entity.Employees;
 import com.example.shopmanagement.repository.EmployeesRepository;
 import com.example.shopmanagement.service.EmployeesService;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.AuditReaderFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static com.example.shopmanagement.mapper.EmployeesMapper.EMPLOYEES_MAPPER;
@@ -17,6 +22,7 @@ import static com.example.shopmanagement.mapper.EmployeesMapper.EMPLOYEES_MAPPER
 @RequiredArgsConstructor
 public class EmployeesServiceImpl implements EmployeesService {
     private final EmployeesRepository employeesRepository;
+    private final EntityManagerFactory entityManager;
 
     @Override
     public Collection<EmployeesResource> findAll() {
@@ -53,6 +59,24 @@ public class EmployeesServiceImpl implements EmployeesService {
         } catch (Exception e) {
             throw new EntityNotFoundException("Employees not found");
         }
+    }
+
+    @Override
+    public Collection<EmployeesResource> findAllAudits(long id) {
+        AuditReader reader = AuditReaderFactory.get(entityManager.createEntityManager());
+     /*   return EMPLOYEES_MAPPER.toEmployeesResources(reader.createQuery()
+                .forRevisionsOfEntity(Employees.class, true, true)
+                .add(AuditEntity.id().eq(id))
+                .getResultList());*/
+
+        List<Number> revisions = reader.getRevisions(Employees.class, id);
+        List<EmployeesResource> employeesResourcesList = new ArrayList<>();
+
+        for (Number revision : revisions) {
+            Employees employees = reader.find(Employees.class, id, revision);
+            employeesResourcesList.add(EMPLOYEES_MAPPER.toEmployeesResource(employees));
+        }
+        return employeesResourcesList;
     }
 
     @Override

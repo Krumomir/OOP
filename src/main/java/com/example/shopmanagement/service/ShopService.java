@@ -10,5 +10,6 @@ public interface ShopService {
     Optional<ShopResource> findById(Long id);
     ShopResource create(ShopResource shop);
     ShopResource update(ShopResource shop, Long id);
+    Collection<ShopResource> findAllAudits(long id);
     void delete(Long id);
 }
